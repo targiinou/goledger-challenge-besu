@@ -10,17 +10,25 @@ import (
 	"time"
 )
 
+// Blockchain define a interface para interações com a blockchain.
 type Blockchain interface {
 	GetCurrentValue(ctx context.Context) (*big.Int, error)
 	SetValue(ctx context.Context, newValue *big.Int) (string, error)
 }
 
+// Storage define a interface para interações com o banco de dados.
 type Storage interface {
 	StoreValue(ctx context.Context, value *big.Int) error
 	GetStoredValue(ctx context.Context) (*big.Int, error)
 }
 
+// getHandler lida com as requisições para consultar o valor na blockchain.
 func (s *Server) getHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	defer cancel()
 
@@ -34,7 +42,13 @@ func (s *Server) getHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "O valor atual no smart contract é: %s", value.String())
 }
 
+// setHandler lida com as requisições para alterar o valor na blockchain.
 func (s *Server) setHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
 	valueStr := r.URL.Query().Get("value")
 	if valueStr == "" {
 		http.Error(w, "Parâmetro 'value' é obrigatório", http.StatusBadRequest)
@@ -60,7 +74,13 @@ func (s *Server) setHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Valor alterado com sucesso! Hash da transação: %s", txHash)
 }
 
+// syncHandler lida com a sincronização do valor da blockchain para o banco de dados.
 func (s *Server) syncHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
@@ -80,7 +100,13 @@ func (s *Server) syncHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Valor (%s) sincronizado com sucesso para o banco de dados!", value.String())
 }
 
+// checkHandler lida com a verificação de sincronia entre a blockchain e o banco de dados.
 func (s *Server) checkHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
@@ -98,7 +124,12 @@ func (s *Server) checkHandler(w http.ResponseWriter, r *http.Request) {
 
 	areEqual := blockchainValue.Cmp(dbValue) == 0
 
-	response := map[string]bool{"are_values_equal": areEqual}
+	response := map[string]interface{}{
+		"are_values_equal": areEqual,
+		"blockchain_value": blockchainValue.String(),
+		"database_value":   dbValue.String(),
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
