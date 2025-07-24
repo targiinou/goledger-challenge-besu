@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/big"
@@ -16,6 +17,7 @@ type Blockchain interface {
 
 type Storage interface {
 	StoreValue(ctx context.Context, value *big.Int) error
+	GetStoredValue(ctx context.Context) (*big.Int, error)
 }
 
 func (s *Server) getHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,4 +78,27 @@ func (s *Server) syncHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "Valor (%s) sincronizado com sucesso para o banco de dados!", value.String())
+}
+
+func (s *Server) checkHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
+	defer cancel()
+
+	blockchainValue, err := s.blockchain.GetCurrentValue(ctx)
+	if err != nil {
+		http.Error(w, "Erro ao buscar valor da blockchain", http.StatusInternalServerError)
+		return
+	}
+
+	dbValue, err := s.storage.GetStoredValue(ctx)
+	if err != nil {
+		http.Error(w, "Erro ao buscar valor do banco de dados", http.StatusInternalServerError)
+		return
+	}
+
+	areEqual := blockchainValue.Cmp(dbValue) == 0
+
+	response := map[string]bool{"are_values_equal": areEqual}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }

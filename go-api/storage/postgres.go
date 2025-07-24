@@ -49,3 +49,21 @@ func (s *PostgresStorage) StoreValue(ctx context.Context, value *big.Int) error 
 	_, err := s.db.Exec(ctx, query, value.String())
 	return err
 }
+
+// GetStoredValue busca o valor atual armazenado no banco de dados.
+func (s *PostgresStorage) GetStoredValue(ctx context.Context) (*big.Int, error) {
+	var valueStr string
+	query := `SELECT value FROM contract_value WHERE id = 1;`
+
+	err := s.db.QueryRow(ctx, query).Scan(&valueStr)
+	if err != nil {
+		return nil, fmt.Errorf("falha ao buscar valor no banco de dados: %w", err)
+	}
+
+	value, ok := new(big.Int).SetString(valueStr, 10)
+	if !ok {
+		return nil, fmt.Errorf("falha ao converter valor do banco de dados para big.Int")
+	}
+
+	return value, nil
+}

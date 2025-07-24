@@ -25,10 +25,13 @@ func (s *Server) Start() {
 	http.HandleFunc("/get", s.getHandler)
 	http.HandleFunc("/set", s.setHandler)
 	http.HandleFunc("/sync", s.syncHandler)
+	http.HandleFunc("/check", s.checkHandler)
 
 	fmt.Println("Servidor da API iniciado na porta 8080.")
 	fmt.Println("Para consultar, acesse: http://localhost:8080/get")
 	fmt.Println("Para alterar, acesse: http://localhost:8080/set?value=SEU_NUMERO")
+	fmt.Println("Para sincronizar com o DB, acesse: http://localhost:8080/sync")
+	fmt.Println("Para checar a sincronia, acesse: http://localhost:8080/check")
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalf("Erro ao iniciar o servidor: %v", err)
