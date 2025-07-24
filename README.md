@@ -53,27 +53,33 @@ Com a rede Besu no ar, agora podemos configurar e iniciar a API.
     cd go-api
     ```
 
-2.  **Crie o arquivo de configuração `.env`:**
+2.  **Copie o arquivo ABI do Contrato:**
+    O arquivo ABI gerado na etapa anterior precisa ser copiado para o diretório `abi` da nossa aplicação.
+    ```bash
+    cp ../besu/artifacts/contracts/SimpleStorage.sol/SimpleStorage.json ./abi/
+    ```
+
+3.  **Crie o arquivo de configuração `.env`:**
     Copie o arquivo de exemplo para criar seu arquivo de configuração local.
     ```bash
     cp .env.example .env
     ```
 
-3.  **Edite o arquivo `.env`:**
+4.  **Edite o arquivo `.env`:**
     Abra o arquivo `.env` e preencha o `CONTRACT_ADDRESS` com o endereço que você copiou no passo anterior. A chave privada (`SIGNER_PRIVATE_KEY`) já está preenchida com a chave de desenvolvimento padrão.
 
-4.  **Inicie o Banco de Dados:**
+5.  **Inicie o Banco de Dados:**
     Use o Docker Compose para iniciar o contêiner do PostgreSQL em segundo plano.
     ```bash
     docker-compose up -d
     ```
 
-5.  **Instale as dependências Go:**
+6.  **Instale as dependências Go:**
     ```bash
     go mod tidy
     ```
 
-6.  **Inicie a API:**
+7.  **Inicie a API:**
     ```bash
     go run .
     ```
