@@ -1,6 +1,14 @@
-# GoLedger Challenge - Besu Edition
+# GoLedger Challenge Besu
 
 Este repositório contém a solução para o desafio GoLedger Besu. A solução consiste em uma API REST em Go que interage com uma rede blockchain Hyperledger Besu local e um banco de dados PostgreSQL para gerenciar o estado de um smart contract.
+
+## Índice
+
+- [Arquitetura da Solução](#arquitetura-da-solução)
+- [Pré-requisitos](#pré-requisitos)
+- [Como Executar a Solução](#como-executar-a-solução)
+- [Endpoints da API](#endpoints-da-api)
+- [Testando com Postman](#testando-com-postman)
 
 ## Arquitetura da Solução
 
