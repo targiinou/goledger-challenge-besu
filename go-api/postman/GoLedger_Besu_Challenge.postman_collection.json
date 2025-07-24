@@ -1,0 +1,91 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-1234-abcdef123456",
+    "name": "GoLedger Besu Challenge",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET - Consultar Valor na Blockchain",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/get",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "get"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST - Alterar Valor na Blockchain",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/set?value=123",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "set"
+          ],
+          "query": [
+            {
+              "key": "value",
+              "value": "123"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST - Sincronizar Valor com o Banco de Dados",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/sync",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "sync"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET - Verificar Sincronia",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/check",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "check"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
