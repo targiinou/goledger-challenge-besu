@@ -108,3 +108,12 @@ Você pode interagir com a API usando `curl` ou seu navegador.
     curl http://localhost:8080/check
     # Exemplo de Resposta: {"are_values_equal":true,"blockchain_value":"42","database_value":"42"}
     ```
+
+## Testando com Postman
+
+Para facilitar os testes, uma coleção do Postman está incluída no projeto.
+
+1.  Abra o Postman.
+2.  Clique em **Import** > **File**.
+3.  Navegue até o diretório `go-api/postman` e selecione o arquivo `GoLedger_Besu_Challenge.postman_collection.json`.
+4.  Uma nova coleção chamada "GoLedger Besu Challenge" aparecerá, contendo as 4 requisições prontas para serem usadas.
